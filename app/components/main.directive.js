@@ -41,7 +41,11 @@ app.directive('main', function() {
 						angular.forEach(week, (day) => {
 							if (day > 0) {
 								counter++;
-								console.log(counter);
+								if (counter == this.number) {
+									this.lastDay = day;
+									this.lastMonth = initMonth;
+									this.lastYear = initYear;
+								}
 							}
 						});
 					});

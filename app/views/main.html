@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="week in main.initMonth">
-                    <td ng-repeat="day in week track by $index">{{day >= main.date.getDate() ? day : ' '}}</td>
+                    <td ng-repeat="day in week track by $index" ng-class="{'weekend': ($index == 0 || $index == 6) && day >= main.date.getDate() && day !== 0, 'weekday': $index > 0 && $index < 6 && day >= main.date.getDate() && day !== 0}">{{day >= main.date.getDate() ? day : ' '}}</td>
                 </tr>
             </tbody>
         </table>
@@ -35,7 +35,7 @@
 </div>
 
 <div ng-if="main.remainingMonths.length > 0">
-	<div ng-repeat="month in main.remainingMonths" class="featurette" id="about">
+	<div ng-repeat="(key, month) in main.remainingMonths" class="featurette" id="about">
 	    <div class="span12">
 	        <table class="table-condensed table-bordered table-striped">
 	            <thead>
@@ -58,7 +58,9 @@
 	            </thead>
 	            <tbody>
 	                <tr ng-repeat="week in month">
-	                    <td ng-repeat="day in week track by $index">{{day}}</td>
+	                    <td ng-repeat="day in week track by $index" ng-class="{'weekend': ($index == 0 || $index == 6) && day !== 0, 'weekday': $index > 0 && $index < 6 && day !== 0}">
+	                    	{{(day !== 0) ? day : ''}}
+	                   	</td>
 	                </tr>
 	            </tbody>
 	        </table>
