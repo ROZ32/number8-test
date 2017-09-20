@@ -8,6 +8,12 @@ module: default
 # Handlers define how to route requests to your application.
 handlers:
 
+- url: /dist/(.+)
+  static_files: dist/\1
+  upload: dist/(.*)
+  http_headers:
+    Access-Control-Allow-Origin: '*'
+
 - url: .*
   script: main.app
 
