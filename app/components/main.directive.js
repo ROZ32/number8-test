@@ -10,9 +10,12 @@ app.directive('main', function() {
 		bindToController: {},
 		controllerAs: 'main',
 		controller: function() {
+			this.monthNames = ["January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"];
 			var calendarFactory = new calendar.Calendar();
 
-			var getRemaingMonths = () => {
+			var getRemainingMonths = () => {
+				this.remainingMonths = [];
 				var counter = 0;
 				var initMonth = this.date.getMonth();
 				var initYear = this.date.getFullYear();
@@ -24,8 +27,7 @@ app.directive('main', function() {
 					});
 				});
 				
-				while(counter != this.number) {
-					this.remaingMonths = [];
+				while(counter < this.number) {
 					if (initMonth == 11) {
 						initMonth = 0;
 						initYear++;
@@ -33,12 +35,13 @@ app.directive('main', function() {
 						initMonth++;
 					}
 
-					var nextMonth = calendarFactory.monthDays(initMonth, initYear);
-					this.remaingMonths.append(nextMonth);
+					var nextMonth = calendarFactory.monthDays(initYear, initMonth);
+					this.remainingMonths.push(nextMonth);
 					angular.forEach(nextMonth, (week) => {
 						angular.forEach(week, (day) => {
-							if (day >= this.date.getDate()) {
+							if (day > 0) {
 								counter++;
+								console.log(counter);
 							}
 						});
 					});
@@ -47,7 +50,8 @@ app.directive('main', function() {
 
 			this.renderCalendar = () => {
 				this.initMonth = calendarFactory.monthDays(this.date.getFullYear(), this.date.getMonth());
-				getRemaingMonths();
+				this.initMonthYear = this.monthNames[this.date.getMonth()] + ' ' + this.date.getFullYear();
+				getRemainingMonths();
 			};
 		}
 	};

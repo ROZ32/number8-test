@@ -11,7 +11,7 @@
                 <tr>
                     <th colspan="7">
                         <span class="btn-group">
-                	<p style="margin-left: 48px;">February 2012</p>
+                	<p style="margin-left: 48px;">{{main.initMonthYear}}</p>
                 </span>
                     </th>
                 </tr>
@@ -32,4 +32,36 @@
             </tbody>
         </table>
     </div>
+</div>
+
+<div ng-if="main.remainingMonths.length > 0">
+	<div ng-repeat="month in main.remainingMonths" class="featurette" id="about">
+	    <div class="span12">
+	        <table class="table-condensed table-bordered table-striped">
+	            <thead>
+	                <tr>
+	                    <th colspan="7">
+	                        <span class="btn-group">
+	                	<p style="margin-left: 48px;">month year</p>
+	                </span>
+	                    </th>
+	                </tr>
+	                <tr>
+	                    <th>Su</th>
+	                    <th>Mo</th>
+	                    <th>Tu</th>
+	                    <th>We</th>
+	                    <th>Th</th>
+	                    <th>Fr</th>
+	                    <th>Sa</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr ng-repeat="week in month">
+	                    <td ng-repeat="day in week track by $index">{{day}}</td>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</div>
 </div>
