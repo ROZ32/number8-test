@@ -16,6 +16,7 @@ app.directive('main', function() {
 
 			var getRemainingMonths = () => {
 				this.remainingMonths = [];
+				console.log(this.holidays);
 				var counter = 0;
 				var initMonth = this.date.getMonth();
 				var initYear = this.date.getFullYear();
@@ -36,7 +37,11 @@ app.directive('main', function() {
 					}
 
 					var nextMonth = calendarFactory.monthDays(initYear, initMonth);
-					this.remainingMonths.push(nextMonth);
+					this.remainingMonths.push({
+						year: initYear,
+						month: initMonth,
+						weeks: nextMonth
+					});
 					angular.forEach(nextMonth, (week) => {
 						angular.forEach(week, (day) => {
 							if (day > 0) {
@@ -52,22 +57,60 @@ app.directive('main', function() {
 				}
 			};
 
-			this.renderCalendar = () => {
-				this.initMonth = calendarFactory.monthDays(this.date.getFullYear(), this.date.getMonth());
-				this.initMonthYear = this.monthNames[this.date.getMonth()] + ' ' + this.date.getFullYear();
-				getRemainingMonths();
+			this.checkIfDateHasHoliday = (year, month, day) => {
+				var dateInFormat;
+				if (this.holidays && day != 0) {				
+					if (!year || !month) {
+						dateInFormat = `${this.date.getFullYear()}-${('0' + (this.date.getMonth() + 1)).slice(-2)}-${('0' + day).slice(-2)}`;
+					} else {
+						dateInFormat = `${year}-${('0' + (month + 1)).slice(-2)}-${('0' + day).slice(-2)}`;
+					}
+
+					if (this.holidays.hasOwnProperty(dateInFormat)) {
+						return this.holidays[dateInFormat];
+					}
+				}
+				return null;
 			};
 
-			this.getHolidays = (contryCode) => {
+			this.renderCalendar = () => {
+				this.error = '';
+				if (!this.date || !this.number || !this.code) {
+					this.error = 'Please fill in all the fields!!!';
+					delete this.initMonth;
+					delete this.initMonthYear;
+					return;
+				}
+
+				if (new Date(this.date) == 'Invalid Date') {
+					this.error = 'Not valid Date!!!';
+					delete this.initMonth;
+					delete this.initMonthYear;
+					return;
+				}
+
+				this.initMonth = calendarFactory.monthDays(this.date.getFullYear(), this.date.getMonth());
+				this.initMonthYear = this.monthNames[this.date.getMonth()] + ' ' + this.date.getFullYear();
+				if (this.date.getFullYear() == 2008) {
+					getHolidays(this.code, getRemainingMonths);
+				} else {
+					getRemainingMonths();
+				}
+			};
+
+			var getHolidays = (contryCode, callback) => {
 				$http.get(
-					'https://holidayapi.com/v1/holidays?key=b5ab6956-fdd1-43ad-9a05-2bbb19e1a752&country=US&year=2008'
+					'https://holidayapi.com/v1/holidays?key=b5ab6956-fdd1-43ad-9a05-2bbb19e1a752&country=' + contryCode + '&year=2008'
 				).then((result) => {
 					this.holidays = result.data.holidays;
+					if (callback) callback();
 				}).catch((error) => {
-					this.error = error;
+					delete this.initMonth;
+					delete this.initMonthYear;
+					delete this.remainingMonths;
+					this.error = 'Error trying to get the holidays';
 				});
 			};
-			this.getHolidays();
 		}
 	};
 });

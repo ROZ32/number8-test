@@ -27,7 +27,9 @@
             </thead>
             <tbody>
                 <tr ng-repeat="week in main.initMonth">
-                    <td ng-repeat="day in week track by $index" ng-class="{'weekend': ($index == 0 || $index == 6) && day >= main.date.getDate() && day !== 0, 'weekday': $index > 0 && $index < 6 && day >= main.date.getDate() && day !== 0}">{{day >= main.date.getDate() ? day : ' '}}</td>
+                    <td ng-repeat="day in week track by $index" ng-class="{'weekend': ($index == 0 || $index == 6) && day >= main.date.getDate() && day !== 0, 'weekday': $index > 0 && $index < 6 && day >= main.date.getDate() && day !== 0, 'holiday': main.checkIfDateHasHoliday(null,null,day)}">
+                    	<div>{{day >= main.date.getDate() ? day : ' '}}</div>
+                   	</td>
                 </tr>
             </tbody>
         </table>
@@ -35,14 +37,14 @@
 </div>
 
 <div ng-if="main.remainingMonths.length > 0">
-	<div ng-repeat="(key, month) in main.remainingMonths" class="featurette" id="about">
+	<div ng-repeat="rem in main.remainingMonths" class="featurette" id="about">
 	    <div class="span12">
 	        <table class="table-condensed table-bordered table-striped">
 	            <thead>
 	                <tr>
 	                    <th colspan="7">
 	                        <span class="btn-group">
-	                	<p style="margin-left: 48px;">month year</p>
+	                	<p style="margin-left: 48px;">{{main.monthNames[rem.month]}} {{rem.year}}</p>
 	                </span>
 	                    </th>
 	                </tr>
@@ -57,9 +59,11 @@
 	                </tr>
 	            </thead>
 	            <tbody>
-	                <tr ng-repeat="week in month">
-	                    <td ng-repeat="day in week track by $index" ng-class="{'weekend': ($index == 0 || $index == 6) && day !== 0, 'weekday': $index > 0 && $index < 6 && day !== 0}">
-	                    	{{(day !== 0) ? day : ''}}
+	                <tr ng-repeat="week in rem.weeks">
+	                    <td ng-repeat="day in week track by $index"
+	                    	ng-hide="rem.month == main.lastMonth && rem.year == main.lastYear && day > main.lastDay"
+	                    	ng-class="{'weekend': ($index == 0 || $index == 6) && day !== 0, 'weekday': $index > 0 && $index < 6 && day !== 0, 'holiday': main.checkIfDateHasHoliday(rem.year,rem.month,day)}">
+	                    	<div>{{(day !== 0) ? day : ''}}</div>
 	                   	</td>
 	                </tr>
 	            </tbody>
@@ -68,5 +72,5 @@
 	</div>
 </div>
 <div ng-if="main.error">
-	<h3>main.error</h3>
+	<h3>{{main.error}}</h3>
 </div>
