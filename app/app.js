@@ -1,9 +1,14 @@
 import angular from 'angular';
 
 import 'angular-ui-router';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const app = angular.module('calendarApp', [
 	'ui.router'
 ]);
 
-console.log('loading angular');
+app.config(function($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise('/');
+});
+
+export default app;

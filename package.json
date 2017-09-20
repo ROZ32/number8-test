@@ -39,6 +39,8 @@
   "dependencies": {
     "angular": "^1.6.4",
     "angular-ui-router": "^1.0.3",
+    "bootstrap": "^4.0.0-beta",
+    "calendar": "^0.1.0",
     "express": "^4.15.3"
   },
   "bugs": {
