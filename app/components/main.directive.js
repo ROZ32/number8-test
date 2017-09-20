@@ -9,7 +9,7 @@ app.directive('main', function() {
 		template: view,
 		bindToController: {},
 		controllerAs: 'main',
-		controller: function() {
+		controller: function($http) {
 			this.monthNames = ["January", "February", "March", "April", "May", "June",
 				"July", "August", "September", "October", "November", "December"];
 			var calendarFactory = new calendar.Calendar();
@@ -53,6 +53,17 @@ app.directive('main', function() {
 				this.initMonthYear = this.monthNames[this.date.getMonth()] + ' ' + this.date.getFullYear();
 				getRemainingMonths();
 			};
+
+			this.getHolidays = (contryCode) => {
+				$http.get(
+					'https://holidayapi.com/v1/holidays?key=b5ab6956-fdd1-43ad-9a05-2bbb19e1a752&country=US&year=2008'
+				).then((result) => {
+					this.holidays = result.data.holidays;
+				}).catch((error) => {
+					this.error = error;
+				});
+			};
+			this.getHolidays();
 		}
 	};
 });
