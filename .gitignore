@@ -103,3 +103,7 @@ ENV/
 # js
 node_modules/
 dist/
+
+# sublime
+*.sublime-workspace
+*.sublime-project
